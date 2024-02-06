@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-
+// Courtesy of https://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/
 GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
 
 	// Create the shaders
