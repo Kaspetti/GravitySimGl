@@ -9,6 +9,10 @@
 #include <vector>
 
 
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
+
+
 static const GLfloat g_plane_verex_buffer_data[] = {
     -1.0f, -1.0f, 0.0f,
     1.0f, -1.0f, 0.0f,
@@ -40,10 +44,11 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_plane_verex_buffer_data), g_plane_verex_buffer_data, GL_STATIC_DRAW);
 
     std::vector<Circle> circles = std::vector<Circle>{};
-    circles.push_back(Circle(vec3(400, 400, 0), vec3(1, 0, 0), 50.0f, 1.0f));
-    circles.push_back(Circle(vec3(200, 200, 0), vec3(1, 0, 0), 50.0f, 1.0f));
+    circles.push_back(Circle(vec3(600, 600, 0), vec3(0.749f, 0.431f, 0.749f), 50.0f, 1.0f));
+    circles.push_back(Circle(vec3(200, 200, 0), vec3(0.8f, 0.31f, 0.196f), 30.0f, 1.0f));
+    circles.push_back(Circle(vec3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.0f), vec3(0.263f, 0.69f, 0.475f), 25.0f, 1.0f));
 
-    GLSLCircle glslCircles[2];
+    GLSLCircle glslCircles[circles.size()];
     for (int i = 0; i < circles.size(); i++) {
         glslCircles[i] = circles[i].getGLSLCircle();
     }
@@ -95,7 +100,7 @@ GLFWwindow* StartGL() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow *window;
-    window = glfwCreateWindow(1024, 768, "Gravity Simulator", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Gravity Simulator", NULL, NULL);
     if (window == NULL) {
         fprintf(stderr, "Failed to create GLFW window.\n");
         glfwTerminate();
