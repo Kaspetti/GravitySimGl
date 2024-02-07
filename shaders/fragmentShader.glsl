@@ -4,9 +4,10 @@ struct Circle {
     vec4 origin;
     vec4 color;
     float radius; 
+    float padding[3];
 };
 
-layout(std140, binding = 0) buffer CirclesBuffer {
+layout(std430, binding = 0) buffer CirclesBuffer {
     Circle circles[];
 };
 
@@ -14,9 +15,9 @@ out vec3 color;
 
 
 void main() {
-    color = vec3(circles.length()); // Default background color
+    color = vec3(0);
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < circles.length(); i++) {
         Circle circle = circles[i];
 
         float distanceFromCenter = distance(gl_FragCoord.xyz, circle.origin.xyz);

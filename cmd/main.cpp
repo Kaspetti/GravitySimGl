@@ -40,18 +40,18 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_plane_verex_buffer_data), g_plane_verex_buffer_data, GL_STATIC_DRAW);
 
     std::vector<Circle> circles = std::vector<Circle>{};
-    circles.push_back(
-        Circle{
-            vec4(250, 250, 0, 0),
-            vec4(1, 0, 0, 0),
-            250.0f
-        }
-    );
+    circles.push_back(Circle(vec3(400, 400, 0), vec3(1, 0, 0), 50.0f, 1.0f));
+    circles.push_back(Circle(vec3(200, 200, 0), vec3(1, 0, 0), 50.0f, 1.0f));
+
+    GLSLCircle glslCircles[2];
+    for (int i = 0; i < circles.size(); i++) {
+        glslCircles[i] = circles[i].getGLSLCircle();
+    }
 
     GLuint ssbo;
     glGenBuffers(1, &ssbo);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, circles.size() * sizeof(Circle), circles.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glslCircles), glslCircles, GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
