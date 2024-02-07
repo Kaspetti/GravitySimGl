@@ -1,25 +1,30 @@
 #version 430 core
 
+struct Circle {
+    vec4 origin;
+    vec4 color;
+    float radius; 
+};
 
-uniform vec3 centers[3];
-uniform int radii[3];
-uniform vec3 colors[3];
-
+layout(std140, binding = 0) buffer CirclesBuffer {
+    Circle circles[];
+};
 
 out vec3 color;
 
 
 void main() {
-    color = vec3(0); // Default background color
+    color = vec3(circles.length()); // Default background color
 
-for (int i = 0; i < 3; i++) {
-        float distanceFromCenter = distance(gl_FragCoord.xyz, centers[i]);
-        float edgeSoftness = 1.0;
-        float radius = float(radii[i]);
-        float edgeStart = radius - edgeSoftness;
+    for (int i = 0; i < 1; i++) {
+        Circle circle = circles[i];
+
+        float distanceFromCenter = distance(gl_FragCoord.xyz, circle.origin.xyz);
+        float edgeSoftness = 2.0;
+        float edgeStart = circle.radius - edgeSoftness;
         
-        float alpha = 1.0 - smoothstep(edgeStart, radius, distanceFromCenter);
+        float alpha = 1.0 - smoothstep(edgeStart, circle.radius, distanceFromCenter);
 
-        color = mix(color, colors[i], alpha);
+        color = mix(color, circle.color.xyz, alpha);
     }
 }

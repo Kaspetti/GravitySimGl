@@ -8,6 +8,6 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
-add_executable(GravitySim cmd/main.cpp shaders/shaders.cpp)
+add_executable(GravitySim cmd/main.cpp shaders/shaders.cpp internal/circle.cpp)
 
 target_link_libraries(GravitySim PRIVATE GLEW::GLEW glfw glm::glm)

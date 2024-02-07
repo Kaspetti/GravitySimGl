@@ -1,10 +1,12 @@
 #include "main.hpp"
+#include "../internal/circle.hpp"
 #include "../shaders/shaders.hpp"
 
 #include <GL/gl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <glm/glm.hpp>
+#include <vector>
 
 
 static const GLfloat g_plane_verex_buffer_data[] = {
@@ -37,32 +39,27 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_plane_verex_buffer_data), g_plane_verex_buffer_data, GL_STATIC_DRAW);
 
-    GLint centersLocation = glGetUniformLocation(programId, "centers");
-    GLint radiiLocation = glGetUniformLocation(programId, "radii");
-    GLint colorsLocation = glGetUniformLocation(programId, "colors");
+    std::vector<Circle> circles = std::vector<Circle>{};
+    circles.push_back(
+        Circle{
+            vec4(250, 250, 0, 0),
+            vec4(1, 0, 0, 0),
+            250.0f
+        }
+    );
 
-    vec3 centers[3] = {vec3(100,100,0), vec3(170, 100, 0), vec3(200, 100, 0)};
-    int radii[3] = {50, 25, 12};
-    vec3 colors[3] = {vec3(1,0,0), vec3(0,1,0), vec3(0,0,1)};
+    GLuint ssbo;
+    glGenBuffers(1, &ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, circles.size() * sizeof(Circle), circles.data(), GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
     do {
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(programId);
-
-        for (int i = 0; i < 3; i++) {
-            if (centers[i].x > 500) {
-                centers[i] -= vec3(0.4,0,0);
-            } else {
-                centers[i] += vec3(0.4,0,0);
-            }
-
-        }
-
-        glUniform1iv(radiiLocation, 3, radii);
-        glUniform3fv(centersLocation, 3, &centers[0][0]);
-        glUniform3fv(colorsLocation, 3, &colors[0][0]);
 
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
