@@ -20,12 +20,17 @@ void main() {
     for (int i = 0; i < circles.length(); i++) {
         circle circle = circles[i];
 
-        float distancefromcenter = distance(gl_FragCoord.xyz, circle.origin.xyz);
-        float edgesoftness = 2.0;
-        float edgestart = circle.radius - edgesoftness;
-        
-        float alpha = 1.0 - smoothstep(edgestart, circle.radius, distancefromcenter);
+        float distanceFromCenter = distance(gl_FragCoord.xyz, circle.origin.xyz);
+        float edgeSoftness = 2.0;
+
+        if (distanceFromCenter > circle.radius-edgeSoftness) {
+            continue;
+        }
+
+        float edgeStart = circle.radius - edgeSoftness;
+        float alpha = 1.0 - smoothstep(edgeStart, circle.radius, distanceFromCenter);
 
         color = mix(color, circle.color.xyz, alpha);
+        break;
     }
 }

@@ -4,10 +4,12 @@
 
 #include <GL/gl.h>
 #include <ctime>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <glm/glm.hpp>
 #include <vector>
+#include <chrono>
 
 
 const int SCREEN_WIDTH = 1280;
@@ -48,7 +50,7 @@ int main() {
     // Generates random circles
     srand(time(0));
     std::vector<Circle> circles = std::vector<Circle>{};
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10000; i++) {
         circles.push_back(Circle(
             vec3(rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, 0.0f),
             vec3(
@@ -76,6 +78,7 @@ int main() {
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
     do {
+        auto start = std::chrono::high_resolution_clock::now();
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(programId);
 
@@ -95,6 +98,12 @@ int main() {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
+        //std::cout << 1000.0 / duration.count() << "fps\n";
+
     } while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
     return 0;
 }
